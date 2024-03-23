@@ -25,5 +25,4 @@ dist-ssr
 
 
 # Or, ignore specific files within .git
-.git/config
-.git/HEAD
+README.md
