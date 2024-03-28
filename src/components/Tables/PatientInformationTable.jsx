@@ -16,7 +16,7 @@ import { InputText } from 'primereact/inputtext';
 import { Tag } from 'primereact/tag';
 export default function PatientInformationTable() {
   let emptyPatient = {
-    recordNum: null,
+    id: null,
     firstName: '',
     middleName: '',
     lastName: '',
@@ -30,7 +30,7 @@ export default function PatientInformationTable() {
   const [patients, setPatients] = useState(null);
   const [patientDialog, setPatientDialog] = useState(false);
   const [deletePatientDialog, setDeletePatientDialog] = useState(false);
-  const [deletePatientDialogs, setDeletePatientsDialog] = useState(false);
+  const [deletePatientsDialog, setDeletePatientsDialog] = useState(false);
   const [patient, setPatient] = useState(emptyPatient);
   const [selectedPatients, setSelectedPatients] = useState(null);
   const [submitted, setSubmitted] = useState(false);
@@ -64,7 +64,7 @@ export default function PatientInformationTable() {
   const savePatient = () => {
     setSubmitted(true);
 
-    if (patient.firsName.trim()) {
+    if (patient.firstName.trim()) {
       let _patients = [...patients];
       let _patient = { ...patient };
 
@@ -100,10 +100,17 @@ export default function PatientInformationTable() {
     setPatientDialog(true);
   };
 
+  const confirmDeletePatient= (patient) =>{
+    setPatient(patient);
+    console.log(patient)
+    setDeletePatientDialog(true);
+  }
+
   const deletePatient = () => {
     let _patients = patients.filter(
-      (val) => val.recordNum !== patient.recordNum,
+      (val) => val.id !== patient.id,
     );
+    console.log('78')
 
     setPatients(_patients);
     setDeletePatientDialog(false);
@@ -115,11 +122,11 @@ export default function PatientInformationTable() {
       life: 3000,
     });
   };
-  const findIndexByRecordNum = (recordNum) => {
+  const findIndexById = (id) => {
     let index = -1;
 
     for (let i = 0; i < patients.length; i++) {
-      if (patients[i].recordNum === recordNum) {
+      if (patients[i].id === id) {
         index = i;
         break;
       }
@@ -127,23 +134,26 @@ export default function PatientInformationTable() {
 
     return index;
   };
-  const createRecordNum = () => {
-    let recordNum = '';
+  const createId = () => {
+    let id = '';
     let chars =
       'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
     for (let i = 0; i < 5; i++) {
-      recordNum += chars.charAt(Math.floor(Math.random() * chars.length));
+      id += chars.charAt(Math.floor(Math.random() * chars.length));
     }
 
-    return recordNum;
+    return id;
   };
   const exportCSV = () => {
     dt.current.exportCSV();
   };
 
   const confirmDeleteSelected = () => {
+    console.log("2")
+ 
     setDeletePatientsDialog(true);
+    
   };
   const deleteSelectedPatients = () => {
     let _patients = patients.filter((val) => !selectedPatients.includes(val));
@@ -223,21 +233,21 @@ export default function PatientInformationTable() {
           rounded
           outlined
           className="mr-2"
-          onClick={() => editProduct(rowData)}
+          onClick={() => editPatient(rowData)}
         />
         <Button
           icon="pi pi-trash"
           rounded
           outlined
           severity="danger"
-          onClick={() => confirmDeleteProduct(rowData)}
+          onClick={() => confirmDeletePatient(rowData)}
         />
       </React.Fragment>
     );
   };
   const header = (
     <div className="flex flex-wrap gap-2 align-items-center justify-content-between">
-      <h4 className="m-0">Manage Products</h4>
+      <h4 className="m-0">Manage Patients</h4>
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
@@ -301,6 +311,7 @@ export default function PatientInformationTable() {
               onClick={openNew}
             />
           }
+          right={rightToolbarTemplate}
         ></Toolbar>
 
         <DataTable
@@ -308,7 +319,7 @@ export default function PatientInformationTable() {
           value={patients}
           selection={selectedPatients}
           onSelectionChange={(e) => setSelectedPatients(e.value)}
-          dataKey="recordNum"
+          dataKey="id"
           paginator
           rows={10}
           rowsPerPageOptions={[5, 10, 25]}
@@ -319,7 +330,7 @@ export default function PatientInformationTable() {
         >
           <Column selectionMode="multiple" exportable={false}></Column>
           <Column
-            field="recordNum"
+            field="id"
             header="Record Number"
             sortable
             style={{ minWidth: '12rem' }}
@@ -534,7 +545,7 @@ export default function PatientInformationTable() {
         </Dialog>
 
         <Dialog
-          visible={deletePatientDialog}
+          visible={deletePatientsDialog}
           style={{ width: '32rem' }}
           breakpoints={{ '960px': '75vw', '641px': '90vw' }}
           header="Confirm"
@@ -545,7 +556,7 @@ export default function PatientInformationTable() {
           <div className="confirmation-content">
             <i
               className="pi pi-exclamation-triangle mr-3"
-              Astyle={{ fontSize: '2rem' }}
+              style={{ fontSize: '2rem' }}
             />
             {patient && (
               <span>

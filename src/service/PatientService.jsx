@@ -2,7 +2,7 @@ export const PatientService = {
     getPatientsData() {
       return [
         {
-          recordNum: "ABC12",
+          id: "ABC12",
           firstName: "John",
           middleName: "Michael",
           lastName: "Doe",
@@ -14,7 +14,7 @@ export const PatientService = {
           password: "password123",
         },
         {
-          recordNum: "DEF34",
+          id: "DEF34",
           firstName: "Jane",
           middleName: "",
           lastName: "Smith",
@@ -26,7 +26,7 @@ export const PatientService = {
           password: "qwerty",
         },
         {
-          recordNum: "GHI56",
+          id: "GHI56",
           firstName: "Michael",
           middleName: "James",
           lastName: "Johnson",
